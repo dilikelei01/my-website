@@ -1,0 +1,163 @@
+[
+  {
+    "objectID": "stocks.html",
+    "href": "stocks.html",
+    "title": "股票与编程",
+    "section": "",
+    "text": "作为一名理工科学生，我对股票市场产生了浓厚的兴趣。我尝试用编程的方式来理解市场数据，将技术与投资结合起来。\n\n\n\n\n\n\nWarning⚠️ 免责声明\n\n\n\n本页面内容仅供学习交流，不构成任何投资建议。股市有风险，投资需谨慎！"
+  },
+  {
+    "objectID": "stocks.html#我的股票之旅",
+    "href": "stocks.html#我的股票之旅",
+    "title": "股票与编程",
+    "section": "",
+    "text": "作为一名理工科学生，我对股票市场产生了浓厚的兴趣。我尝试用编程的方式来理解市场数据，将技术与投资结合起来。\n\n\n\n\n\n\nWarning⚠️ 免责声明\n\n\n\n本页面内容仅供学习交流，不构成任何投资建议。股市有风险，投资需谨慎！"
+  },
+  {
+    "objectID": "stocks.html#python-股票数据爬取",
+    "href": "stocks.html#python-股票数据爬取",
+    "title": "股票与编程",
+    "section": "🐍 Python 股票数据爬取",
+    "text": "🐍 Python 股票数据爬取\n我会用 Python 编写爬虫来获取股票数据，以下是我的一些实践代码示例：\n\n基础数据获取\n# 使用 akshare 库获取股票数据\n# 安装：pip install akshare\n\nimport akshare as ak\nimport pandas as pd\n\n# 获取A股个股历史数据\ndef get_stock_data(stock_code, start_date, end_date):\n    \"\"\"\n    获取股票历史价格数据\n    \n    参数:\n        stock_code: 股票代码（如 '000001' 代表平安银行）\n        start_date: 开始日期（格式：'20240101'）\n        end_date: 结束日期（格式：'20241231'）\n    \n    返回:\n        DataFrame 格式的历史数据\n    \"\"\"\n    df = ak.stock_zh_a_hist(\n        symbol=stock_code, \n        period=\"daily\",\n        start_date=start_date, \n        end_date=end_date,\n        adjust=\"qfq\"  # 前复权\n    )\n    return df\n\n# 示例：获取平安银行数据\n# data = get_stock_data('000001', '20240101', '20241231')\n# print(data.head())\n\n\n批量爬取多只股票\nimport akshare as ak\nimport pandas as pd\nimport time\n\ndef batch_get_stocks(stock_list, start_date, end_date):\n    \"\"\"批量获取多只股票数据\"\"\"\n    all_data = {}\n    \n    for code in stock_list:\n        try:\n            df = ak.stock_zh_a_hist(\n                symbol=code,\n                period=\"daily\", \n                start_date=start_date,\n                end_date=end_date,\n                adjust=\"qfq\"\n            )\n            all_data[code] = df\n            print(f\"✅ {code} 数据获取成功，共 {len(df)} 条记录\")\n            time.sleep(0.5)  # 防止请求过于频繁\n            \n        except Exception as e:\n            print(f\"❌ {code} 数据获取失败：{e}\")\n    \n    return all_data\n\n# 示例使用\n# stocks = ['000001', '600519', '000858']  # 平安银行、贵州茅台、五粮液\n# result = batch_get_stocks(stocks, '20240101', '20241231')"
+  },
+  {
+    "objectID": "stocks.html#k线图分析基础",
+    "href": "stocks.html#k线图分析基础",
+    "title": "股票与编程",
+    "section": "📊 K线图分析基础",
+    "text": "📊 K线图分析基础\nK线图是技术分析的核心工具。以下是我学习K线分析的笔记：\n\nK线基础知识\n\n\n🕯️ 单根K线的四个要素\n\n\n\n要素\n含义\n\n\n\n\n开盘价\n当日第一笔成交价\n\n\n收盘价\n当日最后一笔成交价\n\n\n最高价\n当日最高成交价\n\n\n最低价\n当日最低成交价\n\n\n\n\n阳线（红色）：收盘价 &gt; 开盘价\n阴线（绿色）：收盘价 &lt; 开盘价\n\n\n\n📐 常见K线形态\n\n🔴 大阳线 — 强势上涨信号\n🟢 大阴线 — 强势下跌信号\n⭐ 十字星 — 多空平衡，可能转折\n🔨 锤形线 — 下影线长，可能反转\n☂️ 上吊线 — 上影线长，警惕回调\n\n\n\n\n\n用 Python 绘制K线图\nimport mplfinance as mpf\nimport akshare as ak\nimport pandas as pd\n\ndef plot_kline(stock_code, start_date, end_date, title=\"K线图\"):\n    \"\"\"绘制股票K线图\"\"\"\n    \n    # 获取数据\n    df = ak.stock_zh_a_hist(\n        symbol=stock_code,\n        period=\"daily\",\n        start_date=start_date,\n        end_date=end_date,\n        adjust=\"qfq\"\n    )\n    \n    # 数据格式处理\n    df.index = pd.to_datetime(df['日期'])\n    df = df.rename(columns={\n        '开盘': 'Open',\n        '收盘': 'Close', \n        '最高': 'High',\n        '最低': 'Low',\n        '成交量': 'Volume'\n    })\n    \n    # 绘图设置\n    mc = mpf.make_marketcolors(\n        up='red',    # A股红涨\n        down='green', # A股绿跌\n        volume='in'\n    )\n    s = mpf.make_mpf_style(marketcolors=mc)\n    \n    # 添加均线\n    apds = [\n        mpf.make_addplot(df['Close'].rolling(5).mean(), color='orange', label='MA5'),\n        mpf.make_addplot(df['Close'].rolling(20).mean(), color='blue', label='MA20'),\n    ]\n    \n    mpf.plot(\n        df[['Open', 'High', 'Low', 'Close', 'Volume']],\n        type='candle',\n        style=s,\n        addplot=apds,\n        title=title,\n        volume=True\n    )\n\n# 示例：绘制茅台K线\n# plot_kline('600519', '20240101', '20241231', '贵州茅台 K线图')"
+  },
+  {
+    "objectID": "stocks.html#股票估值方法学习",
+    "href": "stocks.html#股票估值方法学习",
+    "title": "股票与编程",
+    "section": "💰 股票估值方法学习",
+    "text": "💰 股票估值方法学习\n我正在学习股票的基本面估值，以下是我目前了解的主要方法：\n\n常见估值方法对比\n\n\n\n\n\n\n\n\n\n\n估值方法\n适用场景\n核心指标\n优点\n局限性\n\n\n\n\nPE估值\n盈利稳定的成熟企业\n市盈率(P/E)\n简单直观\n不适用亏损企业\n\n\nPB估值\n银行、地产等重资产行业\n市净率(P/B)\n反映资产价值\n忽视盈利能力\n\n\nDCF模型\n现金流稳定企业\n自由现金流\n理论最严谨\n假设过多\n\n\nPEG估值\n成长型企业\nPE/净利润增速\n兼顾成长性\n预测难度大\n\n\nEV/EBITDA\n跨国比较\n企业价值倍数\n排除资本结构影响\n计算复杂\n\n\n\n\n\nPE 估值简单示例\ndef pe_valuation(eps, industry_avg_pe, growth_rate=None):\n    \"\"\"\n    基于PE的简单估值\n    \n    参数:\n        eps: 每股收益（元）\n        industry_avg_pe: 行业平均PE\n        growth_rate: 预期增长率（可选，用于PEG）\n    \n    返回:\n        估值价格\n    \"\"\"\n    # 基础PE估值\n    base_value = eps * industry_avg_pe\n    \n    result = {\n        'EPS': eps,\n        '行业平均PE': industry_avg_pe,\n        'PE估值': base_value,\n    }\n    \n    # 如果提供了增长率，计算PEG估值\n    if growth_rate:\n        peg = industry_avg_pe / (growth_rate * 100)\n        result['PEG'] = round(peg, 2)\n        result['PEG评价'] = '低估' if peg &lt; 1 else ('合理' if peg &lt;= 1.5 else '高估')\n    \n    return result\n\n# 示例：某公司EPS=5元，行业平均PE=20，预期增长率=15%\nexample = pe_valuation(\n    eps=5.0,\n    industry_avg_pe=20,\n    growth_rate=0.15\n)\n\nfor key, value in example.items():\n    print(f\"{key}: {value}\")"
+  },
+  {
+    "objectID": "stocks.html#我的投资学习计划",
+    "href": "stocks.html#我的投资学习计划",
+    "title": "股票与编程",
+    "section": "🔍 我的投资学习计划",
+    "text": "🔍 我的投资学习计划\n\n\n📚 已掌握\n\nPython 数据爬取基础\nK线形态基础识别\n技术指标（MA、MACD）入门\n基础的PE/PB估值概念\n\n\n\n🎯 学习中\n\n高级K线形态分析\n量价关系分析\n行业比较分析方法\nDCF模型实操\n\n\n\n🚀 计划学习\n\n量化交易基础\n机器学习预测股价\n期权基础知识\n财报深度分析"
+  },
+  {
+    "objectID": "stocks.html#寻找交流伙伴",
+    "href": "stocks.html#寻找交流伙伴",
+    "title": "股票与编程",
+    "section": "🤝 寻找交流伙伴",
+    "text": "🤝 寻找交流伙伴\n\n\n\n\n\n\nTip📣 诚邀交流！\n\n\n\n我目前在自学股票投资，希望找到志同道合的朋友一起进步：\n🔍 如果你会看K线 - 欢迎分享你的技术分析经验 - 一起探讨市场规律和交易策略 - 交流不同形态的识别技巧\n💡 如果你懂股票估值 - 欢迎分享你的估值方法和框架 - 一起讨论如何找到被低估的好公司 - 交流财务报表分析技巧\n🐍 如果你也会 Python - 一起开发更强大的选股工具 - 交流数据处理和可视化技巧 - 探讨量化投资的可能性\n有意交流请通过首页联系方式找我！📧"
+  },
+  {
+    "objectID": "stocks.html#学习资源推荐",
+    "href": "stocks.html#学习资源推荐",
+    "title": "股票与编程",
+    "section": "📌 学习资源推荐",
+    "text": "📌 学习资源推荐\n以下是我正在使用的学习资源：\n\nPython 股票库\n\nakshare — 免费的A股数据获取库\ntushare — 金融数据接口（需注册）\nmplfinance — K线图绘制\npandas — 数据处理\n\n学习网站\n\nQuarto 官方文档 — 本网站的构建工具\n雪球 — 股票社区交流\n同花顺 — 股票行情软件\n\n推荐书籍\n\n《日本蜡烛图技术》— K线圣经\n《手把手教你读财报》— 财务报表分析\n《聪明的投资者》— 价值投资经典"
+  },
+  {
+    "objectID": "hobbies.html",
+    "href": "hobbies.html",
+    "title": "我的爱好",
+    "section": "",
+    "text": "游戏是我放松减压的重要方式。在繁忙的科研学习之余，打游戏让我能够暂时脱离现实，享受另一种沉浸式体验。\n\n\n\n\n\n\nNote为什么喜欢打游戏？\n\n\n\n游戏不仅仅是娱乐，它锻炼了我的反应速度、策略思维和团队协作能力。很多游戏中的问题解决思路，对实际学习和研究也有启发。\n\n\n\n\n\n\n🗡️ 动作/RPG 类\n\n喜欢沉浸式的世界观构建\n享受角色成长的过程\n喜欢有深度剧情的游戏\n\n\n\n🧠 策略类\n\n喜欢需要思考的游戏\n喜欢资源管理类型\n对战略博弈有浓厚兴趣"
+  },
+  {
+    "objectID": "hobbies.html#游戏",
+    "href": "hobbies.html#游戏",
+    "title": "我的爱好",
+    "section": "",
+    "text": "游戏是我放松减压的重要方式。在繁忙的科研学习之余，打游戏让我能够暂时脱离现实，享受另一种沉浸式体验。\n\n\n\n\n\n\nNote为什么喜欢打游戏？\n\n\n\n游戏不仅仅是娱乐，它锻炼了我的反应速度、策略思维和团队协作能力。很多游戏中的问题解决思路，对实际学习和研究也有启发。\n\n\n\n\n\n\n🗡️ 动作/RPG 类\n\n喜欢沉浸式的世界观构建\n享受角色成长的过程\n喜欢有深度剧情的游戏\n\n\n\n🧠 策略类\n\n喜欢需要思考的游戏\n喜欢资源管理类型\n对战略博弈有浓厚兴趣"
+  },
+  {
+    "objectID": "hobbies.html#动漫",
+    "href": "hobbies.html#动漫",
+    "title": "我的爱好",
+    "section": "🎌 动漫",
+    "text": "🎌 动漫\n动漫是我生活中不可缺少的一部分。从第一部动漫开始，我就深深爱上了这种艺术形式。\n\n⚔️ 入坑之作：刀剑神域（SAO）\n\n\n\n\n\n\nImportant关于刀剑神域\n\n\n\n《刀剑神域》（Sword Art Online） 是我看的第一部动漫，也是让我真正爱上动漫的作品！\n\n原作：川原砾（Reki Kawahara）轻小说\n主角：桐谷和人（游戏ID：Kirito，黑色剑士）\n故事核心：玩家被困在虚拟现实网游中，死亡即真实死亡\n\n\n\n\n\n🔥 为什么喜欢桐老爷？\n\n“桐老爷拉刀光” —— 这大概是SAO最让人热血沸腾的瞬间！\n\n桐人（Kirito）作为主角，有太多令人印象深刻的地方：\n\n\n💪 超强实力\n双刀流技能、独特的异形技能树，桐老爷的战斗风格帅到没朋友！\n\n\n🖤 帅气外表\n一身黑色装备，被称为”黑色剑士”。无论是SAO还是ALO时期，都超级帅气！\n\n\n❤️ 重情重义\n在虚拟世界中坚守对亚斯娜的感情，为了保护朋友不惜一切，真男人！\n\n\n\n\n经典场景回顾\n\n  \n    「このゲームはクリアできる。俺はそれを証明する。」\n    （这个游戏是可以通关的，我会证明这一点。）\n    —— 桐谷和人 / Kirito，《刀剑神域》\n  \n\n\n\n📺 动漫观看记录\n以下是我看过的一些动漫（持续更新中）：\n\n\n\n动漫名称\n类型\n推荐指数\n备注\n\n\n\n\n刀剑神域\n冒险/爱情/科幻\n⭐⭐⭐⭐⭐\n入坑之作，必看！\n\n\n刀剑神域：进击篇\n动作/科幻\n⭐⭐⭐⭐⭐\n枪械战斗超帅\n\n\n刀剑神域：爱丽丝篇\n冒险/奇幻\n⭐⭐⭐⭐⭐\n剧情最深刻的一部\n\n\n\n\n\n\n\n\n\nTip给还没看过SAO的朋友\n\n\n\n如果你还没看过刀剑神域，强烈推荐！从第一集开始就会被吸进去，尤其是桐人第一次使出双刀流的那一幕，绝对让你热血沸腾！🔥"
+  },
+  {
+    "objectID": "hobbies.html#爱好带给我的收获",
+    "href": "hobbies.html#爱好带给我的收获",
+    "title": "我的爱好",
+    "section": "🌟 爱好带给我的收获",
+    "text": "🌟 爱好带给我的收获\n打游戏和看动漫不只是消遣，它们让我：\n\n培养创造力 — 游戏和动漫中丰富的世界观激发了我的想象力\n学习日语 — 因为喜欢看原声动漫，学了一些基础日语\n认识朋友 — 通过共同爱好结识了很多志同道合的朋友\n放松心情 — 在紧张的科研学习之余得到有效放松"
+  },
+  {
+    "objectID": "hobbies.html#寻找动漫同好",
+    "href": "hobbies.html#寻找动漫同好",
+    "title": "我的爱好",
+    "section": "💌 寻找动漫同好",
+    "text": "💌 寻找动漫同好\n如果你也喜欢 SAO 或者其他动漫，欢迎来找我交流！我们可以一起：\n\n📋 分享喜欢的动漫推荐\n🎭 讨论剧情与角色\n🎵 分享动漫 OP/ED 音乐\n🎨 欣赏同人作品\n\n\n\n\n\n\n\nNote\n\n\n\n“二次元的世界里，总有一个角色在某个瞬间击中了你的心。”\n桐老爷就是那个让我爱上动漫的角色 ⚔️✨"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "关于我",
+    "section": "",
+    "text": "项目\n内容\n\n\n\n\n姓名\n王力辉\n\n\n学号\n2025303110040\n\n\n专业\n环境工程\n\n\n兴趣方向\n股票分析、动漫、游戏\n\n\n\n\n\n\n#环境工程 #Python编程 #股票投资 #动漫爱好者 #游戏玩家 #K线分析"
+  },
+  {
+    "objectID": "about.html#个人信息",
+    "href": "about.html#个人信息",
+    "title": "关于我",
+    "section": "",
+    "text": "项目\n内容\n\n\n\n\n姓名\n王力辉\n\n\n学号\n2025303110040\n\n\n专业\n环境工程\n\n\n兴趣方向\n股票分析、动漫、游戏\n\n\n\n\n\n\n#环境工程 #Python编程 #股票投资 #动漫爱好者 #游戏玩家 #K线分析"
+  },
+  {
+    "objectID": "about.html#学术背景",
+    "href": "about.html#学术背景",
+    "title": "关于我",
+    "section": "🎓 学术背景",
+    "text": "🎓 学术背景\n我是一名环境工程专业的研究生，专注于环境领域的科学研究。在学习专业知识的同时，我也培养了对编程、数据分析和金融投资的浓厚兴趣。\n\n\n\n\n\n\nNote专业简介：环境工程\n\n\n\n环境工程是将工程学原理应用于解决环境问题的学科，涵盖水处理、大气污染控制、固废处理、环境修复等方向。"
+  },
+  {
+    "objectID": "about.html#技能树",
+    "href": "about.html#技能树",
+    "title": "关于我",
+    "section": "💻 技能树",
+    "text": "💻 技能树\n\n编程技能\n\n  \n    Python（数据爬取与处理）\n    \n      65%\n    \n  \n  \n    Quarto（科技写作）\n    \n      40%\n    \n  \n  \n    数据分析（Pandas/Excel）\n    \n      55%\n    \n  \n\n\n\n投资分析技能\n\n📊 K线图基础识别 — 掌握基本形态\n📉 技术指标 — 了解 MA、MACD 等\n🔍 基本面分析 — 学习中…\n💡 股票估值 — 希望深入学习"
+  },
+  {
+    "objectID": "about.html#联系我-寻找交流",
+    "href": "about.html#联系我-寻找交流",
+    "title": "关于我",
+    "section": "🤝 联系我 / 寻找交流",
+    "text": "🤝 联系我 / 寻找交流\n我很希望认识以下类型的朋友：\n\n\n📈 股票技术分析达人\n如果你精通K线分析、技术指标，欢迎和我交流！我们可以一起研究市场走势，互相学习。\n\n\n💰 股票估值高手\n如果你熟悉DCF模型、PE/PB估值、行业分析，我很想向你学习！\n\n\n🎮 游戏 & 动漫同好\n如果你也喜欢打游戏、看动漫（特别是SAO系列），我们一定有很多共同话题！"
+  },
+  {
+    "objectID": "about.html#这个网站的意义",
+    "href": "about.html#这个网站的意义",
+    "title": "关于我",
+    "section": "📝 这个网站的意义",
+    "text": "📝 这个网站的意义\n这个网站是我学习 Quarto 的实践项目。通过构建这个个人网站，我在学习：\n\nQuarto 文档系统 — 如何用 .qmd 文件创建网页\nYAML 配置 — 网站结构与主题设置\nMarkdown 扩展语法 — Callout、Grid布局等\n代码集成 — 在文档中嵌入可执行代码\n\n\n\n\n\n\n\nTip\n\n\n\n学习 Quarto 最好的方式就是直接动手做项目！这个个人网站就是我的第一个 Quarto 实战作品 🚀"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "欢迎来到王力辉的个人主页",
+    "section": "",
+    "text": "环境工程专业研究生，喜欢在代码与K线之间寻找规律，也喜欢在动漫世界里感受热血。这里是我的个人主页，记录我的学习与生活。"
+  },
+  {
+    "objectID": "index.html#关于这个网站",
+    "href": "index.html#关于这个网站",
+    "title": "欢迎来到王力辉的个人主页",
+    "section": "🌟 关于这个网站",
+    "text": "🌟 关于这个网站\n这个网站使用 Quarto 构建，既是我的个人展示页面，也是我学习 Quarto 技术的实践平台。\n\n\n👤 个人简介\n\n姓名：王力辉\n学号：2025303110040\n专业：环境工程\n了解更多 →\n\n\n\n🎮 我的爱好\n\n打游戏\n看动漫（入坑作：刀剑神域）\n追番追剧\n探索爱好 →\n\n\n\n📈 股票 & 编程\n\nPython 爬取股票数据\nK线技术分析\n股票估值研究\n查看详情 →"
+  },
+  {
+    "objectID": "index.html#学习-quarto",
+    "href": "index.html#学习-quarto",
+    "title": "欢迎来到王力辉的个人主页",
+    "section": "📚 学习 Quarto",
+    "text": "📚 学习 Quarto\n\nQuarto 是一个强大的开源科学与技术出版系统，支持 Python、R、Julia 等多种语言。\n\n以下是一些 Quarto 的核心功能演示：\n\n代码块示例\n# 用 Python 获取股票数据示例\nimport pandas as pd\n\n# 模拟股票数据\ndata = {\n    '日期': ['2026-03-10', '2026-03-11', '2026-03-12', '2026-03-13'],\n    '开盘价': [100.0, 102.5, 101.0, 103.5],\n    '收盘价': [102.5, 101.0, 103.5, 105.0],\n    '成交量': [1500000, 1200000, 1800000, 2100000]\n}\n\ndf = pd.DataFrame(data)\nprint(df)\n\n\nQuarto 特性一览\n\n\n\n特性\n说明\n\n\n\n\n多格式输出\n支持 HTML、PDF、Word 等\n\n\n代码执行\n支持 Python、R、Julia\n\n\n交互图表\n支持 Plotly、Observable JS\n\n\n学术写作\n支持参考文献、交叉引用"
+  },
+  {
+    "objectID": "index.html#找我交流",
+    "href": "index.html#找我交流",
+    "title": "欢迎来到王力辉的个人主页",
+    "section": "💬 找我交流",
+    "text": "💬 找我交流\n如果你也对以下话题感兴趣，欢迎来找我交流！\n\n📊 K线技术分析 — 一起研究市场走势\n💰 股票基本面估值 — DCF、市盈率、PB 等估值方法\n🎌 动漫推荐 — 从刀剑神域开始的二次元之旅\n🌿 环境工程 — 学业上的互相帮助\n\n\n\n\n\n\n\nTip寻找志同道合的朋友！\n\n\n\n我会写一点 Python 用于爬取股票信息，希望遇到会看K线和懂股票估值的朋友，一起交流投资心得！"
+  }
+]

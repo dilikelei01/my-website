@@ -1,0 +1,255 @@
+/* 王力辉个人网站 - 自定义样式 */
+
+/* ===== 全局样式 ===== */
+body {
+  font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ===== 导航栏样式 ===== */
+.navbar {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand, .navbar .nav-link {
+  color: #e8e8e8 !important;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar .nav-link:hover {
+  color: #64b5f6 !important;
+}
+
+/* ===== 首页横幅 ===== */
+.hero-banner {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+  color: white;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.hero-banner h1 {
+  color: white;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero-banner p {
+  font-size: 1.1rem;
+  color: #b0c4de;
+  line-height: 1.8;
+}
+
+/* ===== 卡片式网格样式 ===== */
+.grid .g-col-12 {
+  padding: 1rem;
+}
+
+.grid h3, .grid h4 {
+  color: #1a237e;
+  border-bottom: 2px solid #64b5f6;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* ===== 技能条样式 ===== */
+.skill-bar {
+  margin: 1.5rem 0;
+}
+
+.skill-item {
+  margin-bottom: 1.2rem;
+}
+
+.skill-name {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #37474f;
+}
+
+.progress {
+  background-color: #e0e0e0;
+  border-radius: 20px;
+  height: 24px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #1565c0, #64b5f6);
+  height: 100%;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  transition: width 1s ease-in-out;
+}
+
+/* ===== 动漫引用块样式 ===== */
+.anime-quote {
+  margin: 2rem 0;
+}
+
+.anime-quote blockquote {
+  background: linear-gradient(135deg, #f3e5f5, #e8eaf6);
+  border-left: 5px solid #7b1fa2;
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.anime-quote blockquote p:first-child {
+  font-style: normal;
+  color: #4a148c;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.anime-quote blockquote p:last-of-type {
+  color: #6a1b9a;
+  margin-top: 0.5rem;
+}
+
+.anime-quote blockquote footer {
+  color: #9c27b0;
+  font-size: 0.9rem;
+  margin-top: 0.8rem;
+}
+
+/* ===== 表格样式美化 ===== */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+thead tr {
+  background: linear-gradient(135deg, #1565c0, #1976d2);
+  color: white;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+tbody tr:hover {
+  background-color: #e3f2fd;
+  transition: background-color 0.2s ease;
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* ===== Callout 样式增强 ===== */
+.callout {
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* ===== 代码块样式 ===== */
+pre {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+code {
+  font-family: "JetBrains Mono", "Consolas", "Fira Code", monospace;
+}
+
+/* ===== 链接样式 ===== */
+a {
+  color: #1565c0;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #0d47a1;
+  text-decoration: underline;
+}
+
+/* ===== 页脚样式 ===== */
+.nav-footer {
+  background-color: #1a1a2e;
+  color: #9e9e9e;
+  padding: 1rem 0;
+}
+
+.nav-footer a {
+  color: #90caf9;
+}
+
+/* ===== 标题样式 ===== */
+h1, h2 {
+  color: #1a237e;
+}
+
+h2 {
+  border-bottom: 2px solid #e3f2fd;
+  padding-bottom: 0.5rem;
+  margin-top: 2rem;
+}
+
+h3 {
+  color: #283593;
+}
+
+/* ===== 响应式调整 ===== */
+@media (max-width: 768px) {
+  .hero-banner h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-banner {
+    padding: 2rem 1rem;
+  }
+}
+
+/* ===== 标签/徽章样式 ===== */
+code.sourceCode {
+  font-size: 0.88em;
+}
+
+/* 内联代码（标签效果）*/
+p code, li code {
+  background-color: #e8f4f8;
+  color: #1565c0;
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+/* ===== 滚动条美化 ===== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #90caf9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1565c0;
+}
